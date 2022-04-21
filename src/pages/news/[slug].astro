@@ -1,6 +1,6 @@
 ---
 import { story } from "../../story-type-sb.d.ts";
-import SiteLayout from "layouts/SiteLayout.astro";
+import SiteLayout from "@layouts/SiteLayout.astro";
 
 export async function getPages(page:number){
   return fetch(`https://api.storyblok.com/v1/cdn/stories?token=ad5QO1riSaAA8HYntfzxCwtt&starts_with=news&page=${page}&per_page=100&version=draft&sort_by=created_at:asc`);
