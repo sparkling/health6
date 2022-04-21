@@ -1,0 +1,46 @@
+---
+import { story } from "story-type-sb.d.ts";
+import SiteLayout from "layouts/SiteLayout.astro";
+import PageNav from "components/pagenav.astro";
+
+export async function getResponse(page:number){
+  return fetch(`https://api.storyblok.com/v1/cdn/stories?token=ad5QO1riSaAA8HYntfzxCwtt&starts_with=news&page=${page}&per_page=100&version=draft&sort_by=created_at:asc`);
+}
+
+
+export async function getStaticPaths({ paginate }) {
+  let response = await getResponse(1);
+  let responseJson = await response.json();
+  let allStories = responseJson.stories;
+  const pages:number = Number(response.headers.get("total")) / Number(response.headers.get("per-page"));
+  for (let i = 1; i < pages; i++){
+    response = await getResponse(i);
+    responseJson = await response.json();
+    allStories.concat(responseJson.stories);
+  }
+  //console.log(allStories);
+  // Return a paginated collection of paths for all posts
+  const pagges = paginate(allStories, { pageSize: 2 });
+  //console.log(pagges);
+  return pagges;
+}
+
+
+
+// If set up correctly, The page prop now has everything that
+// you need to render a single page (see next section).
+const { page } = Astro.props;
+
+//console.log(page);
+
+---
+<SiteLayout>
+  <h1>Page {page.currentPage}</h1>
+  <ul>
+    {page.data.map((story:story) => 
+      <li>
+        <a href="/news/${story.slug}">{story.content.Title}</a>
+      </li>)}
+  </ul>
+  <PageNav page={page} baseUrl={"/news/list/"} />
+</SiteLayout>

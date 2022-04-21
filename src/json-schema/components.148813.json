@@ -1,0 +1,61 @@
+{
+  "components": [
+    {
+      "name": "Newsitem",
+      "display_name": null,
+      "created_at": "2022-03-01T22:54:26.868Z",
+      "updated_at": "2022-03-01T23:02:22.301Z",
+      "id": 2235134,
+      "schema": {
+        "Title": {
+          "type": "text",
+          "pos": 0
+        },
+        "Subheading": {
+          "type": "textarea",
+          "translatable": true,
+          "max_length": "100",
+          "required": true,
+          "pos": 1
+        },
+        "Summary": {
+          "type": "textarea",
+          "max_length": "250",
+          "translatable": true,
+          "required": true,
+          "pos": 2
+        },
+        "HeroImage": {
+          "type": "asset",
+          "filetypes": [
+            "images"
+          ],
+          "pos": 3
+        },
+        "Body": {
+          "type": "richtext",
+          "translatable": true,
+          "required": true,
+          "pos": 4
+        },
+        "Links": {
+          "type": "multilink",
+          "description": "",
+          "translatable": true,
+          "pos": 5
+        }
+      },
+      "image": null,
+      "preview_field": null,
+      "is_root": true,
+      "preview_tmpl": null,
+      "is_nestable": false,
+      "all_presets": [],
+      "preset_id": null,
+      "real_name": "Newsitem",
+      "component_group_uuid": null,
+      "color": null,
+      "icon": null
+    }
+  ]
+}

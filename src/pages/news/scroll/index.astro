@@ -1,0 +1,15 @@
+---
+import ScrollComponent from 'components/ScrollComponent.astro'
+import SiteLayout from "layouts/SiteLayout.astro";
+
+let stories:object[] = [
+  {name:"name"}, 
+  {name:"name"}, 
+  {name:"name"}, 
+  {name:"name"}, 
+  {name:"name"}, 
+  {name:"name"}];
+---
+<SiteLayout>
+  <ScrollComponent stories=stories />
+</SiteLayout>

@@ -1,0 +1,34 @@
+---
+import { story } from "../../story-type-sb.d.ts";
+import SiteLayout from "layouts/SiteLayout.astro";
+
+export async function getPages(page:number){
+  return fetch(`https://api.storyblok.com/v1/cdn/stories?token=ad5QO1riSaAA8HYntfzxCwtt&starts_with=news&page=${page}&per_page=100&version=draft&sort_by=created_at:asc`);
+}
+
+export async function getStaticPaths({ paginate }) {
+  let response = await getPages(1);
+  let responseJson = await response.json();
+  let allStories = responseJson.stories;
+  const pages:number = Number(response.headers.get("total")) / Number(response.headers.get("per-page"));
+  for (let i = 1; i < pages; i++){
+    response = await getPages(i);
+    responseJson = await response.json();
+    allStories.concat(responseJson.stories);
+  }
+  const staticPaths: string[] = allStories.map((story:story) => {
+    return {
+      params: { slug: story.slug },
+      props: { story },
+    };
+  });
+  //let pagination = paginate(allStories, { pageSize: 10 });
+
+  return staticPaths; //.concat(pagination);
+}
+
+const {story} = Astro.props;
+---
+<SiteLayout>
+  <h1>{story.content.Title}</h1>  
+</SiteLayout>

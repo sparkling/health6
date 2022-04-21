@@ -1,0 +1,21 @@
+---
+import Header from "$components/Header.astro";
+import Footer from "$components/Footer.astro";
+import type { stories } from "$/stories-type-sb.d.ts";
+export type Props = {
+  stories: stories;
+};
+const { stories } = Astro.props as Props;
+---
+
+<div>
+  <Header />
+  <div >
+    <slot />
+  </div>
+  <Footer />
+</div>
+
+<style>
+
+</style>

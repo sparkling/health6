@@ -1,0 +1,118 @@
+---
+import XElement from 'astro-xelement';
+
+const { div:ScrollContent, div:LoadingSpinner, div:ItemTemplate } = XElement;
+
+const templatingMap = new Map<string, string>();
+
+const fetchWithTimeout = async (resource, options = {}) => {
+  const { timeout = 8000 } = options;
+  
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal  
+  });
+  clearTimeout(id);
+  return response;
+}
+
+const getPage = async (store:any) => {
+  //console.log("in getPage", this);
+  if (store.noMore) {
+    return;
+  }
+  loadingSpinner.style.display = '';
+  var offset = (store.currentPage - 1) * 10;
+  let markup = '';
+  let nwcontent = document.createElement('div');
+  try {
+    const response = await fetchWithTimeout('https://api.storyblok.com/v1/cdn/stories?token=ad5QO1riSaAA8HYntfzxCwtt&starts_with=news&page=${page}&per_page=100&version=draft&sort_by=created_at:asc', {
+        timeout: 6000
+      });
+    let responseJson = await response.json();
+    let allStories = responseJson.stories;
+    store.currentPage += 1;
+    
+    for (let i = 0; i < allStories.length; i++) {
+      let data = Object.assign({}, allStories[i].content, { slug: allStories[i].slug} );
+      markup += templatize(data, itemTemplate.innerHTML, null);
+    }
+    if (allStories.length === 0) {
+      markup = '<p>No More Results.</p>';
+      store.noMore = true;
+    }
+  } catch (error) {
+    markup = "<p>error loading data...</p>"
+    store.noMore = true;
+  }
+  nwcontent.innerHTML = markup;
+  scrollContent.appendChild(nwcontent);
+  loadingSpinner.style.display = 'none';
+}
+
+const templatize = (story, templateParam, pathPrefix) => {
+  console.log("in templatize", story);
+  let template = templateParam;
+  pathPrefix = pathPrefix || '';
+  if (startsWith('.', pathPrefix)) {
+      pathPrefix = pathPrefix.substring(1);
+  }
+  for (let p in story) {
+      let val = story[p];
+      if (val !== null && typeof val === 'object') {
+          template = templatize(val, template, pathPrefix + '.' + p);
+      } else {
+          let regex = new RegExp('#' + (pathPrefix.length === 0 ? '' : pathPrefix + '.') + p + '#', 'gi');
+          template = template.replace(regex, val);
+      }
+  }
+  return template;
+}
+
+const startsWith = (findThis, here) => {
+  return here.substr(0, findThis.length) === findThis;
+}
+---
+<ScrollContent
+  id="scrollContent"
+  define:vars={
+    {
+      getPage,
+      templatize,
+      startsWith,
+      fetchWithTimeout
+    }
+  }
+  @do={(element,store)=>{
+      store.noMore = false;
+      store.currentPage = 1;
+
+      console.log("element", element);
+      console.log("store", store);
+      console.log("this", this);      
+      
+      window.addEventListener('scroll', function () {
+        let scrollTop = document.documentElement.scrollTop;
+        let scrollHeight = document.documentElement.scrollHeight;
+        let clientHeight = document.documentElement.clientHeight;
+        if (scrollTop + clientHeight >= scrollHeight - 5 && !store.noMore) {
+          getPage(store);
+        }
+      }, { passive:true });    
+      getPage(store);
+  }}
+></ScrollContent>
+
+<LoadingSpinner id="loadingSpinner" class="alert alert-info mt-4 mb-4" style="display:none;text-align:center;">
+  <i class="fas fa-spinner fa-4x fa-spin"></i><br/>
+  Loading results...
+</LoadingSpinner>
+
+<ItemTemplate id="itemTemplate" style="display:none;">
+  <div class="scroll-item" style="min-height: 5em">
+    <h1><a href="#slug#">#Title#</a></h1>
+  </div>
+</ItemTemplate>
+
