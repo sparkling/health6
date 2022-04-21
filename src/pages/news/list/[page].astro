@@ -1,7 +1,7 @@
 ---
 //import { story } from "story-type-sb.d.ts";
-//import SiteLayout from "../../../layouts/SiteLayout.astro";
-import PageNav from "../../../components/pagenav.astro";
+import SiteLayout from "../../../layouts/SiteLayout.astro";
+//import PageNav from "../../../components/pagenav.astro";
 
 export async function getResponse(page:number){
   return fetch(`https://api.storyblok.com/v1/cdn/stories?token=ad5QO1riSaAA8HYntfzxCwtt&starts_with=news&page=${page}&per_page=100&version=draft&sort_by=created_at:asc`);
@@ -34,7 +34,7 @@ const { page } = Astro.props;
 //console.log(page);
 
 ---
-
+<SiteLayout>
   <h1>Page {page.currentPage}</h1>
   <ul>
     {page.data.map((story) => 
@@ -42,4 +42,5 @@ const { page } = Astro.props;
         <a href="/news/${story.slug}">{story.content.Title}</a>
       </li>)}
   </ul>
-  <PageNav page={page} baseUrl={"/news/list/"} />
+  
+</SiteLayout>
