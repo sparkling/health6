@@ -1,4 +1,5 @@
 import solid from '@astrojs/solid-js';
+import netlify from '@astrojs/netlify/edge-functions';
 import { defineConfig } from 'astro/config'
 
 export default defineConfig({
@@ -8,6 +9,8 @@ export default defineConfig({
   // pages: './src/pages', // Path to Astro components, pages, and data
   // dist: './dist',       // When running `astro build`, path to final static output
   // public: './public',   // A folder of static files Astro will copy to the root. Useful for favicons, images, and other files that don’t need processing.
+
+  adapter: netlify(),
 
   integrations: [
     solid()
