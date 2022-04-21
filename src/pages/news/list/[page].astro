@@ -1,5 +1,5 @@
 ---
-import { story } from "story-type-sb.d.ts";
+//import { story } from "story-type-sb.d.ts";
 import SiteLayout from "../../../layouts/SiteLayout.astro";
 import PageNav from "../../../components/pagenav.astro";
 
@@ -37,7 +37,7 @@ const { page } = Astro.props;
 <SiteLayout>
   <h1>Page {page.currentPage}</h1>
   <ul>
-    {page.data.map((story:story) => 
+    {page.data.map((story) => 
       <li>
         <a href="/news/${story.slug}">{story.content.Title}</a>
       </li>)}
