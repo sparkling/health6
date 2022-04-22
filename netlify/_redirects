@@ -1,0 +1,5 @@
+
+/    /.netlify/functions/entry    200
+/news/scroll    /.netlify/functions/entry    200
+/news/list/*    /.netlify/functions/entry    200
+/news/*    /.netlify/functions/entry    200
