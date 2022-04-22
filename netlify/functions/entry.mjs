@@ -1046,7 +1046,7 @@ ${renderComponent($$result, "LoadingSpinner", LoadingSpinner, { "id": "loadingSp
 ` })}
 
 ${renderComponent($$result, "ItemTemplate", ItemTemplate, { "id": "itemTemplate", "style": "display:none;" }, { "default": () => render`<div class="scroll-item" style="min-height: 5em">
-    <h1><a href="#slug#">#Title#</a></h1>
+    <h1><a href="/news/#slug#">#Title#</a></h1>
   </div>` })}
 
 `;
