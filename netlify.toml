@@ -1,5 +1,5 @@
 [build]
   command = "npm run build"
-  publish = "netlify"
+  publish = "dist"
 [functions]
   external_node_modules = ["astro"]
