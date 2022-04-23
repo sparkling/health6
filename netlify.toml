@@ -3,3 +3,4 @@
   publish = "netlify"
 [functions]
   external_node_modules = ["astro"]
+  directory = "/netlify/functions"
